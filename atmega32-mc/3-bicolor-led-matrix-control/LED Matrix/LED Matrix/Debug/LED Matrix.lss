@@ -1,0 +1,225 @@
+
+LED Matrix.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000013a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000008  00800060  0000013a  000001ae  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000001b6  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001e8  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000020  00000000  00000000  00000224  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000006a4  00000000  00000000  00000244  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000005ad  00000000  00000000  000008e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000029f  00000000  00000000  00000e95  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000034  00000000  00000000  00001134  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000034e  00000000  00000000  00001168  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000158  00000000  00000000  000014b6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000010  00000000  00000000  0000160e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   8:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  10:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  14:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  18:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  1c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  20:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  24:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  28:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  2c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  30:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  34:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  38:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  3c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  40:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  44:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  48:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  4c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  50:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	ea e3       	ldi	r30, 0x3A	; 58
+  68:	f1 e0       	ldi	r31, 0x01	; 1
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+  70:	a8 36       	cpi	r26, 0x68	; 104
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
+  76:	0e 94 41 00 	call	0x82	; 0x82 <main>
+  7a:	0c 94 9b 00 	jmp	0x136	; 0x136 <_exit>
+
+0000007e <__bad_interrupt>:
+  7e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000082 <main>:
+#include <util/delay.h>
+
+
+
+int main(void)
+{
+  82:	cf 93       	push	r28
+  84:	df 93       	push	r29
+  86:	cd b7       	in	r28, 0x3d	; 61
+  88:	de b7       	in	r29, 0x3e	; 62
+  8a:	28 97       	sbiw	r28, 0x08	; 8
+  8c:	0f b6       	in	r0, 0x3f	; 63
+  8e:	f8 94       	cli
+  90:	de bf       	out	0x3e, r29	; 62
+  92:	0f be       	out	0x3f, r0	; 63
+  94:	cd bf       	out	0x3d, r28	; 61
+    uint8_t matrix[] = {0x7E,0x7E,0x18,0x18,0x18,0x18,0x18,0x18};
+  96:	88 e0       	ldi	r24, 0x08	; 8
+  98:	e0 e6       	ldi	r30, 0x60	; 96
+  9a:	f0 e0       	ldi	r31, 0x00	; 0
+  9c:	de 01       	movw	r26, r28
+  9e:	11 96       	adiw	r26, 0x01	; 1
+  a0:	01 90       	ld	r0, Z+
+  a2:	0d 92       	st	X+, r0
+  a4:	8a 95       	dec	r24
+  a6:	e1 f7       	brne	.-8      	; 0xa0 <main+0x1e>
+	DDRC = 0xFF;
+  a8:	8f ef       	ldi	r24, 0xFF	; 255
+  aa:	84 bb       	out	0x14, r24	; 20
+	DDRD = 0xFF;
+  ac:	81 bb       	out	0x11, r24	; 17
+	
+	// Replace with your application code
+	uint8_t c = 1, i = 0;
+  ae:	60 e0       	ldi	r22, 0x00	; 0
+  b0:	21 e0       	ldi	r18, 0x01	; 1
+    while (1) 
+    {
+		PORTC = c;
+  b2:	25 bb       	out	0x15, r18	; 21
+		PORTD = ~matrix[i];
+  b4:	86 2f       	mov	r24, r22
+  b6:	90 e0       	ldi	r25, 0x00	; 0
+  b8:	e1 e0       	ldi	r30, 0x01	; 1
+  ba:	f0 e0       	ldi	r31, 0x00	; 0
+  bc:	ec 0f       	add	r30, r28
+  be:	fd 1f       	adc	r31, r29
+  c0:	e8 0f       	add	r30, r24
+  c2:	f9 1f       	adc	r31, r25
+  c4:	30 81       	ld	r19, Z
+  c6:	30 95       	com	r19
+  c8:	32 bb       	out	0x12, r19	; 18
+		i = (i+1)%8;
+  ca:	01 96       	adiw	r24, 0x01	; 1
+  cc:	87 70       	andi	r24, 0x07	; 7
+  ce:	90 78       	andi	r25, 0x80	; 128
+  d0:	99 23       	and	r25, r25
+  d2:	24 f4       	brge	.+8      	; 0xdc <main+0x5a>
+  d4:	01 97       	sbiw	r24, 0x01	; 1
+  d6:	88 6f       	ori	r24, 0xF8	; 248
+  d8:	9f 6f       	ori	r25, 0xFF	; 255
+  da:	01 96       	adiw	r24, 0x01	; 1
+  dc:	68 2f       	mov	r22, r24
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  de:	83 ef       	ldi	r24, 0xF3	; 243
+  e0:	91 e0       	ldi	r25, 0x01	; 1
+  e2:	01 97       	sbiw	r24, 0x01	; 1
+  e4:	f1 f7       	brne	.-4      	; 0xe2 <main+0x60>
+  e6:	00 c0       	rjmp	.+0      	; 0xe8 <main+0x66>
+  e8:	00 00       	nop
+		
+		
+		
+		
+		_delay_ms(2);
+		c <<= 1;
+  ea:	22 0f       	add	r18, r18
+		if (!c) {
+  ec:	11 f7       	brne	.-60     	; 0xb2 <main+0x30>
+			PORTC = c;
+  ee:	25 bb       	out	0x15, r18	; 21
+			for(int j = 0; j < 8; j++){
+  f0:	80 e0       	ldi	r24, 0x00	; 0
+  f2:	90 e0       	ldi	r25, 0x00	; 0
+  f4:	15 c0       	rjmp	.+42     	; 0x120 <main+0x9e>
+				char t = matrix[j] & 0x01;
+  f6:	e1 e0       	ldi	r30, 0x01	; 1
+  f8:	f0 e0       	ldi	r31, 0x00	; 0
+  fa:	ec 0f       	add	r30, r28
+  fc:	fd 1f       	adc	r31, r29
+  fe:	e8 0f       	add	r30, r24
+ 100:	f9 1f       	adc	r31, r25
+ 102:	30 81       	ld	r19, Z
+				matrix[j] >>= 1;
+ 104:	73 2f       	mov	r23, r19
+ 106:	76 95       	lsr	r23
+				matrix[j] = matrix[j] | (t << 7);
+ 108:	43 2f       	mov	r20, r19
+ 10a:	41 70       	andi	r20, 0x01	; 1
+ 10c:	50 e0       	ldi	r21, 0x00	; 0
+ 10e:	9a 01       	movw	r18, r20
+ 110:	36 95       	lsr	r19
+ 112:	32 2f       	mov	r19, r18
+ 114:	22 27       	eor	r18, r18
+ 116:	37 95       	ror	r19
+ 118:	27 95       	ror	r18
+ 11a:	27 2b       	or	r18, r23
+ 11c:	20 83       	st	Z, r18
+		
+		_delay_ms(2);
+		c <<= 1;
+		if (!c) {
+			PORTC = c;
+			for(int j = 0; j < 8; j++){
+ 11e:	01 96       	adiw	r24, 0x01	; 1
+ 120:	88 30       	cpi	r24, 0x08	; 8
+ 122:	91 05       	cpc	r25, r1
+ 124:	44 f3       	brlt	.-48     	; 0xf6 <main+0x74>
+ 126:	89 e6       	ldi	r24, 0x69	; 105
+ 128:	98 e1       	ldi	r25, 0x18	; 24
+ 12a:	01 97       	sbiw	r24, 0x01	; 1
+ 12c:	f1 f7       	brne	.-4      	; 0x12a <main+0xa8>
+ 12e:	00 c0       	rjmp	.+0      	; 0x130 <main+0xae>
+ 130:	00 00       	nop
+				matrix[j] = matrix[j] | (t << 7);
+				//_delay_ms(200);
+			}
+			_delay_ms(25);
+			
+			c = 1;
+ 132:	21 e0       	ldi	r18, 0x01	; 1
+ 134:	be cf       	rjmp	.-132    	; 0xb2 <main+0x30>
+
+00000136 <_exit>:
+ 136:	f8 94       	cli
+
+00000138 <__stop_program>:
+ 138:	ff cf       	rjmp	.-2      	; 0x138 <__stop_program>

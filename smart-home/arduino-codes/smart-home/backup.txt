@@ -1,0 +1,162 @@
+#include <Wire.h>              //Library for I2C communication
+#include "LiquidCrystal_I2C.h" //I2C LCD library
+#include <Servo.h>
+#include "DHT.h"
+
+// HC-SR04 : sonar sensor
+#define TRIGPIN 9
+#define ECHOPIN 10
+
+#define BUZZERPIN 7
+#define FLAME_SENSORPIN 12
+
+#define LEDPIN 5
+
+// temperature and humidity sensor
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+long duration;
+float distance;
+
+bool buzzerOn = false;
+
+// Bracket er moddhe prothom ta I2C Scanner code diye address ta scan kore niye boshabo,
+// ar baki duita LCD er dimension
+LiquidCrystal_I2C lcd(0x3F, 16, 2); // file/examples/wire/i2c_scanner
+
+// servo configurations
+Servo door_servo;
+int pos = 0; // Servo ke initially leftmost position e rakhlam
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup()
+{
+    // put your setup code here, to run once:
+    Serial.begin(9600);
+
+    pinMode(TRIGPIN, OUTPUT);
+    pinMode(ECHOPIN, INPUT);
+    pinMode(FLAME_SENSORPIN, INPUT);
+    pinMode(LEDPIN, OUTPUT);
+    pinMode(BUZZERPIN, OUTPUT);
+
+    lcd.begin();
+    lcd.backlight();
+    lcd.print("Measuring ");
+    lcd.setCursor(2, 3);
+    lcd.print("temperature");
+    delay(1000);
+    lcd.clear();
+    door_servo.attach(6);
+
+    //
+    dht.begin();
+}
+
+/**
+ * https://howtomechatronics.com/tutorials/arduino/ultrasonic-sensor-hc-sr04/
+ */
+void openDoor()
+{
+    digitalWrite(TRIGPIN, LOW);
+    delayMicroseconds(2);
+    digitalWrite(TRIGPIN, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TRIGPIN, LOW);
+    duration = pulseIn(ECHOPIN, HIGH);
+    distance = duration * 0.017;
+
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.print("\n");
+
+    // door open er code
+    door_servo.write(distance < 10 ? 90 : 0);
+}
+
+void ldrLightControl()
+{
+    // ldr portion
+    int ldrvalue = analogRead(A0);
+    Serial.print("Ldr: ");
+    Serial.print(ldrvalue);
+    Serial.print("\n");
+    digitalWrite(LEDPIN, ldrvalue < 230);
+    // LDR er sathe 4.7kohm resistor diye voltage divider create kore full light e analogvalue pai 280 er upore
+    // ar dark hole 280 er kom
+}
+
+void detectFire()
+{
+    // flame sensor_eikhane kono analog output pin nai. tai arduino er digital pin ekta te input nibo
+    // Flame sensor activate hoile 0 output dey ar naile 1 output dey
+    int flame = digitalRead(FLAME_SENSORPIN);
+    Serial.print("flame: ");
+    Serial.print(flame);
+    Serial.print("\n");
+    delay(20);
+    buzzerOn = !flame || buzzerOn;
+    digitalWrite(BUZZERPIN, buzzerOn);
+}
+
+void detectSmoke()
+{
+    // Smoke sensor
+
+    int smoke = digitalRead(A1);
+    Serial.print("Smoke: ");
+    Serial.print(smoke);
+    Serial.print("\n");
+
+    // Temparature Sensor er measurement er Code
+    delay(20);
+    buzzerOn = !smoke || buzzerOn;
+    digitalWrite(BUZZERPIN, buzzerOn);
+}
+
+void measureTemperatureAndHumidity()
+{
+    ///////////////////// DHT //////////////////
+    // Reading temperature or humidity takes about 250 milliseconds!
+    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+    float h = dht.readHumidity();
+    // Read temperature as Celsius (the default)
+    float t = dht.readTemperature();
+    // Read temperature as Fahrenheit (isFahrenheit = true)
+    float f = dht.readTemperature(true);
+
+    // Check if any reads failed and exit early (to try again).
+    if (isnan(h) || isnan(t) || isnan(f))
+    {
+        Serial.println(F("Failed to read from DHT sensor!"));
+        return;
+    }
+
+    // Compute heat index in Fahrenheit (the default)
+    float hif = dht.computeHeatIndex(f, h);
+    // Compute heat index in Celsius (isFahreheit = false)
+    float hic = dht.computeHeatIndex(t, h, false);
+
+    lcd.clear();
+    lcd.print("Humidity:");
+    lcd.print(h);
+    lcd.setCursor(0, 1);
+    lcd.print("Temp:");
+    lcd.print(t);
+    delay(1000);
+}
+
+void loop()
+{
+    buzzerOn = false;
+    // put your main code here, to run repeatedly:
+    measureTemperatureAndHumidity();
+    openDoor();
+    ldrLightControl();
+    detectFire();
+    detectSmoke();
+
+    Serial.print("\n\n");
+}
